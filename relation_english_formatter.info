@@ -1,0 +1,4 @@
+name = Relation English Formatter
+description = Provides a formatter for Relation
+core = 7.x
+dependencies[] = relation

@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Implement hook_field_formatter_info
+ */
+function relation_english_formatter_field_formatter_info() {
+  return array(
+    'relation_natural' => array(
+      'label' => t('Relation English Natural'),
+      'field types' => array('relation'),
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_formatter_view
+ */
+function relation_english_formatter_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $elements = array();
+  
+  switch ($display['type']) {
+    case 'relation_natural':
+      $links = array();
+      foreach ($items as $item) {
+        $uri = entity_uri($item['other_entity_type'], $item['entity']);
+        $link = array(
+          'title' => entity_label($item['other_entity_type'], $item['entity']),
+          'href' => $uri['path'],
+        ) + $uri;
+        $links[] = l($link['title'], $link['href'], $link);
+      }
+      
+      if (count($links) > 1) {
+        $last_link = array_pop($links);
+        $links[] = t('and ') . $last_link;
+      }
+      
+      $elements[0] = array(
+        '#markup' => implode(', ', $links),
+      );
+      break;
+  }
+  
+  return $elements;
+}
